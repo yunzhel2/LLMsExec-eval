@@ -1,0 +1,16 @@
+## Perl
+
+conda create -n myperl python=3.8
+conda activate myperl
+conda install -c conda-forge perl
+perl -v
+touch myscript.pl
+perl myscript.pl
+
+
+
+## D
+curl -fsS https://dlang.org/install.sh | bash -s dmd
+source ~/dlang/dmd-2.105.0/activate
+touch script.d
+rdmd script.d
