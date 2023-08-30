@@ -14,3 +14,13 @@ curl -fsS https://dlang.org/install.sh | bash -s dmd
 source ~/dlang/dmd-2.105.0/activate
 touch script.d
 rdmd script.d
+
+
+
+## Pascal and delphi
+sudo apt update
+sudo apt install fpc
+fpc -v
+sudo apt install lazarus
+touch hello.pas
+fpc hello.pas > compile.log && ./hello || cat compile.log
