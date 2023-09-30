@@ -59,7 +59,7 @@ def evaluate_functional_correctness(
     unittest_file: str = "unittest_db.json",
     execeval_url: str = "http://localhost:5000",
     block_network: bool = True,
-    stop_on_first_fail: bool = False,
+    stop_on_first_fail: bool = True,
     use_sanitizer: bool = False,
 ):
     """
@@ -86,10 +86,9 @@ def evaluate_functional_correctness(
                     enumerate(sample_rp), desc="Reading samples"
                 ):
                     src_uid = sample["src_uid"]
-                    source_code = sample["source_code"]
-                    task_id = sample["task_id"]
-                    # task_id = sample["src_uid"]
-                    lang = sample["lang"]
+                    source_code = sample["C"]
+                    task_id = sample["src_uid"]
+                    lang = 'GNU C'
                     if src_uid not in unittest_db:
                         continue
                     unittests = unittest_db[src_uid]
@@ -164,10 +163,9 @@ def evaluate_functional_correctness(
             cnt = 0
             for idx, sample in enumerate(sample_rp):
                 cnt += 1
-                if sample["lang"] not in supported_langs:
-                    continue
+                # if sample["lang"] not in supported_langs:
+                #     continue
                 task_id = sample["src_uid"]
-                # task_id = sample["task_id"]
                 if len(results[task_id]) == 0:
                     continue
                 if results[task_id][0][0] > idx:
@@ -201,7 +199,7 @@ def entry_point(
     unittest_file: str = "unittest_db.json",
     execeval_url: str = "http://localhost:5000",
     block_network: bool = True,
-    stop_on_first_fail: bool = True,
+    stop_on_first_fail: bool = False,
     use_sanitizer: bool = False,
 ):
     """
@@ -217,6 +215,7 @@ def entry_point(
     assume yaml files and consider config.yaml for compile..args,
     and resource_limits.py for limits_by_lang
     """
+    print(f" stop_on_first_fail: {stop_on_first_fail}")
     limits_by_lang, compile_n_execute_args_by_lang = None, {}
     if limits_by_lang_cfg_file is None:
         limits_by_lang_cfg_file = "limits_by_lang.yaml"

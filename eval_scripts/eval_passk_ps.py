@@ -14,12 +14,13 @@ import tqdm
 sys.path.extend(
     [Path(__file__).parent.parent, Path(__file__).parent.parent / "execution_engine"]
 )
-# exit(0)
-# sys.path.extend([
+
 from api_comm import APICommunication
 from exec_outcome import ExecOutcome
 from yaml import safe_load
 
+target_lang_clusters = ['C++', 'Java', 'Python', 'C', 'C#', 'Ruby', 'delphi', 'Go',
+                'Javascript', 'Kotlin', 'PHP', 'd', 'perl', 'Rust']
 
 def estimate_pass_at_k(
     num_samples: Union[int, list[int], np.ndarray],
@@ -85,18 +86,18 @@ def evaluate_functional_correctness(
                 for idx, sample in tqdm.tqdm(
                     enumerate(sample_rp), desc="Reading samples"
                 ):
-                    src_uid = sample["src_uid"]
-                    source_code = sample["source_code"]
-                    task_id = sample["task_id"]
-                    # task_id = sample["src_uid"]
-                    lang = sample["lang"]
-                    if src_uid not in unittest_db:
-                        continue
-                    unittests = unittest_db[src_uid]
-                    if len(unittests) == 0:
-                        continue
-                    if lang not in supported_langs:
-                        continue
+                    for lang_cluster in target_lang_clusters:
+                        src_uid = sample["src_uid"]
+                        source_code = sample[lang_cluster]
+                        task_id = sample["task_id"]
+                        lang = sample["lang"]
+                        if src_uid not in unittest_db:
+                            continue
+                        unittests = unittest_db[src_uid]
+                        if len(unittests) == 0:
+                            continue
+                        if lang not in supported_langs:
+                            continue
 
                     args = (
                         lang,
@@ -201,7 +202,7 @@ def entry_point(
     unittest_file: str = "unittest_db.json",
     execeval_url: str = "http://localhost:5000",
     block_network: bool = True,
-    stop_on_first_fail: bool = True,
+    stop_on_first_fail: bool = False,
     use_sanitizer: bool = False,
 ):
     """

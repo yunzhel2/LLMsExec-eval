@@ -59,14 +59,15 @@ def run_job():
         job = JobData.json_parser(request.json)
         log = f"api/execute_code: Executing for {job.language}"
         result = execution_engine.check_output_match(job)
+
         ret = {"data": [r.json() for r in result]}
         exec_outcomes = [
             r.exec_outcome
             for r in result
             if not (r.exec_outcome is None or r.exec_outcome is ExecOutcome.PASSED)
         ] + [ExecOutcome.PASSED]
-        log = f"{log} time: {(time.perf_counter_ns()-st)/(1000_000_000)}s, |uts|={len(job.unittests)}, exec_outcome={exec_outcomes[0].value}"
-
+        log = f"{log} time: {(time.perf_counter_ns()-st)/(1000_000_000)}s, |uts|={len(job.unittests)}, exec_outcome={exec_outcomes[0].value} {exec_outcomes[1].value} ret = {ret['data']}"
+        # log = f"{log} and {ret}"
     except Exception as e:
         ret = {"error": str(e) + f"\n{traceback.print_exc()}"}, 400
         log = f"{log} time: {(time.perf_counter_ns()-st)/(1000_000_000)}s, {ret}"

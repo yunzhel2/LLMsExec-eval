@@ -8,8 +8,8 @@ from helper import convert_crlf_to_lf
 class Unittest:
     input: str
     output: str
-    result: str | None = None
-    exec_outcome: ExecOutcome | None = None
+    result: str  = None
+    exec_outcome: ExecOutcome = None
 
     def __post_init__(self):
         self.input = convert_crlf_to_lf(self.input)
@@ -29,8 +29,8 @@ class Unittest:
 class ExtendedUnittest:
     input: str
     output: list[str] = field(default_factory=list)
-    result: str | None = None
-    exec_outcome: ExecOutcome | None = None
+    result: str  = None
+    exec_outcome: ExecOutcome  = None
 
     def __post_init__(self):
         self.input = convert_crlf_to_lf(self.input)

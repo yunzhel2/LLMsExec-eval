@@ -115,9 +115,9 @@ class ExecutionEngine:
         self,
         lang: str,
         source_file: Path,
-        cmd: str | None = None,
-        flags: str | None = None,
-    ) -> tuple[str | Path, bool]:
+        cmd: str= None,
+        flags: str  = None,
+    ) -> tuple[str , bool]:
         if not self.supported_languages[lang].is_compiled_language:
             return source_file, False
 
@@ -184,6 +184,7 @@ class ExecutionEngine:
             result = executor
             if isinstance(executor, (LanguageError, JavaClassNotFoundError)):
                 result = executor.msg
+
             elif not isinstance(result, str):
                 result = "Some bug in ExecEval, please do report."
             return [
@@ -257,6 +258,7 @@ class ExecutionEngine:
                 if exec_outcome is None:
                     if child_process.returncode == 0 and outs is not None:
                         result = outs.decode(errors="ignore").strip()
+
                         exec_outcome = (
                             ExecOutcome.PASSED
                             if any(

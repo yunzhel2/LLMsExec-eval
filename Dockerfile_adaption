@@ -16,6 +16,13 @@ RUN apt-get update && \
 RUN apt-get install -y mono-devel \
         gcc-12 g++-12
 
+# Use an official base image as a starting point
+FROM gcc:latest
+
+# Install the required packages, including g++ and libstdc++
+RUN apt-get update && apt-get install -y g++ libstdc++-10-dev
+
+
 RUN apt-get update && \
     apt-get install -y software-properties-common python3.11-dev 
 
@@ -85,8 +92,7 @@ RUN make install
 WORKDIR /root/
 RUN rm -rf libseccomp*
 
-ENV JAVA_HOME /usr/lib/jvm/jdk-20
-ENV PATH $PATH:$JAVA_HOME/bin
+
 ENV RUN_UID 1586
 ENV RUN_GID 1586
 ENV NUM_WORKERS 16
@@ -102,5 +108,5 @@ RUN mkdir execution_engine
 COPY ./execution_engine /root/execution_engine
 
 WORKDIR /root/execution_engine
-RUN java -version
+
 CMD bash start_engine.sh
